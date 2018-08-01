@@ -1,0 +1,2 @@
+{"_id":{"$oid":"5b61dfa44bd90a0f8ed8fb83"},"name":"Name 1","obj":{"attr1":"value1","attr2":"value2"}}
+{"_id":{"$oid":"5b61dff75ef9f10f8ef62e71"},"name":"Name 2","obj":{"attr1":"value3","attr2":"value4"}}
