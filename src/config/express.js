@@ -1,6 +1,6 @@
-var express = require("express");
+const express = require("express");
 // body-parser is a dependency of express.
-var bodyParser = require("body-parser");
+const bodyParser = require("body-parser");
 
 const app = express();
 
@@ -10,7 +10,7 @@ var port = process.env.PORT || 4000;
 // Parse json request into req.body
 app.use(bodyParser.json());
 
-// Start app. 
+// Start app.
 app.listen(port, () => {
   console.log("server started in port", port);
 });

@@ -1,4 +1,4 @@
-var mongoose = require("mongoose");
+const mongoose = require("mongoose");
 
 // Get enviroment variables.
 const DB_URI = process.env.DB_URI;
