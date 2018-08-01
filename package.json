@@ -1,0 +1,37 @@
+{
+  "name": "applaudo-test",
+  "version": "0.0.0",
+  "description": "Test project for Applaudo recruitment process",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "serve": "nodemon --exec npm run start --watch src",
+    "start": "node src/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MarvinBarahona/Applaudo-Test.git"
+  },
+  "keywords": [
+    "node",
+    "mongo",
+    "mean"
+  ],
+  "author": "Marvin Barahona",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/MarvinBarahona/Applaudo-Test/issues"
+  },
+  "homepage": "https://github.com/MarvinBarahona/Applaudo-Test#readme",
+  "engines": {
+    "node": "8.11.3"
+  },
+  "dependencies": {
+    "dotenv": "^6.0.0",
+    "express": "^4.16.3",
+    "mongoose": "^5.2.6"
+  },
+  "devDependencies": {
+    "nodemon": "^1.18.3"
+  }
+}
