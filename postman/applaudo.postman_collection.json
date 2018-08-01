@@ -1,0 +1,67 @@
+{
+	"info": {
+		"_postman_id": "993e0e07-b92e-47e8-8aaa-c12837db247b",
+		"name": "applaudo",
+		"description": "Applaudo Test API collection; use for test. ",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "home",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{server}}",
+					"host": [
+						"{{server}}"
+					]
+				},
+				"description": "Gets a greating message from the server"
+			},
+			"response": []
+		},
+		{
+			"name": "Test data",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{server}}/test",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"test"
+					]
+				},
+				"description": "Gets database dump data"
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "1d20572e-b168-4545-9568-958298735892",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "a1ec6001-c0fd-48d9-b1f8-d61424f3e099",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}

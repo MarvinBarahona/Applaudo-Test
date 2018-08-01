@@ -1,12 +1,15 @@
-var mongoose = require("mongoose");
+const mongoose = require("mongoose");
 
-// Get enviroment variables.
+// Loading models
+require("../models/");
+
+// Get environment variables.
 const DB_URI = process.env.DB_URI;
 const DB_NAME = process.env.DB_NAME;
 
 // If any variable is missing, close the app.
 if(!DB_URI || !DB_NAME){
-  console.log("unable to get DB_URI or DB_NAME from enviroment variables!");
+  console.log("unable to get DB_URI or DB_NAME from environment variables!");
   console.log("did you set them on the .env file?");
   process.exit(1);
 }
