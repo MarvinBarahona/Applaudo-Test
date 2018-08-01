@@ -1,4 +1,4 @@
-// Configure app to use .env file to set enviroment variables into process.env
+// Configure app to use .env file to set environment variables into process.env
 require("dotenv").config();
 
 // Load database configuration.
