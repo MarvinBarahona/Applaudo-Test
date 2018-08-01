@@ -2,7 +2,7 @@
 require("dotenv").config();
 
 // Load database configuration.
-var database = require("./config/database");
+require("./config/database");
 
 // Load express configuration.
-var app = require("./config/express");
+require("./config/express");
