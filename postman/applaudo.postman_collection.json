@@ -1,21 +1,31 @@
 {
 	"info": {
-		"_postman_id": "993e0e07-b92e-47e8-8aaa-c12837db247b",
+		"_postman_id": "7e350f61-cc09-4da3-9f2b-8f616c00ce17",
 		"name": "applaudo",
 		"description": "Applaudo Test API collection; use for test. ",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
-			"name": "home",
+			"name": "Test - Home",
 			"request": {
+				"auth": {
+					"type": "noauth"
+				},
 				"method": "GET",
 				"header": [],
-				"body": {},
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
 				"url": {
-					"raw": "{{server}}",
+					"raw": "{{server}}/api/v1",
 					"host": [
 						"{{server}}"
+					],
+					"path": [
+						"api",
+						"v1"
 					]
 				},
 				"description": "Gets a greating message from the server"
@@ -23,25 +33,142 @@
 			"response": []
 		},
 		{
-			"name": "Test data",
+			"name": "Test - Get data",
 			"request": {
+				"auth": {
+					"type": "noauth"
+				},
 				"method": "GET",
 				"header": [],
 				"body": {},
 				"url": {
-					"raw": "{{server}}/test",
+					"raw": "{{server}}/api/v1/test",
 					"host": [
 						"{{server}}"
 					],
 					"path": [
+						"api",
+						"v1",
 						"test"
 					]
 				},
 				"description": "Gets database dump data"
 			},
 			"response": []
+		},
+		{
+			"name": "Test - Get data (client only)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{server}}/api/v1/test/client",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"test",
+						"client"
+					]
+				},
+				"description": "Gets database dump data"
+			},
+			"response": []
+		},
+		{
+			"name": "Test - Get data (admin only)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{server}}/api/v1/test/admin",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"test",
+						"admin"
+					]
+				},
+				"description": "Gets database dump data"
+			},
+			"response": []
+		},
+		{
+			"name": "Auth - Login",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"username\": \"admin\",\n\t\"password\": \"8YTNvti9nr\"\n}"
+				},
+				"url": {
+					"raw": "{{server}}/api/v1/login",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"login"
+					]
+				},
+				"description": "Authenticate users, using a username and password."
+			},
+			"response": []
+		},
+		{
+			"name": "Auth - My profile",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{server}}/api/v1/me",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"me"
+					]
+				},
+				"description": "Get the current user profile"
+			},
+			"response": []
 		}
 	],
+	"auth": {
+		"type": "oauth2",
+		"oauth2": [
+			{
+				"key": "accessToken",
+				"value": "<<Insert your token>>",
+				"type": "string"
+			},
+			{
+				"key": "addTokenTo",
+				"value": "header",
+				"type": "string"
+			}
+		]
+	},
 	"event": [
 		{
 			"listen": "prerequest",

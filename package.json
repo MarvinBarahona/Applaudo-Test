@@ -1,6 +1,6 @@
 {
   "name": "applaudo-test",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "Test project for Applaudo recruitment process",
   "main": "src/index.js",
   "scripts": {
@@ -27,8 +27,10 @@
     "node": "8.11.3"
   },
   "dependencies": {
+    "bcrypt": "^3.0.0",
     "dotenv": "^6.0.0",
     "express": "^4.16.3",
+    "jsonwebtoken": "^8.3.0",
     "mongoose": "^5.2.6",
     "morgan": "^1.9.0"
   },
