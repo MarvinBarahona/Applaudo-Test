@@ -14,7 +14,7 @@ function getToken(payload){
 
       // Options. Usign default algorithm HS256 and expires in two hours.
       {
-        expiresIn: "10s"
+        expiresIn: "2h"
       },
 
       // Callback function.
@@ -32,6 +32,8 @@ function getToken(payload){
 function verifyToken(token){
   // Wrap function in Promise.
   return new Promise(function(resolve, reject){
+
+    if(token.startsWith("Bearer ")) token = token.replace("Bearer ", "");
 
     // Verify a JWT
     jwt.verify(

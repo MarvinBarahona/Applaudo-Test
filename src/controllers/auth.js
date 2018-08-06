@@ -1,5 +1,5 @@
 const bcrypt = require("bcrypt");
-const jwt = require("../helpers/jwt");
+const jwtHelper = require("../helpers/jwt");
 const User = require("mongoose").model("users");
 const Role = require("mongoose").model("roles");
 
@@ -49,7 +49,7 @@ function login(req, res, next){
     // Create JWT and return success response.
       else{
         role = _role;
-        return jwt.getToken({role: role.name})
+        return jwtHelper.getToken({user: user.username, role: role.name})
       }
     }).then(function(token){
       res.status(200).json({
