@@ -30,7 +30,7 @@ You should now see the next messages in the console:
 See more information of the [installation process and testing the API in the wiki](https://github.com/MarvinBarahona/Applaudo-Test/wiki/Installation)
 
 ***
-## Testing the app
+### Database dump and Postman collection.
 In order to facilitate testing this API, there's a database dump in the folder "dump" of the source code. To know how to import test data to your MongoDB database, check the [how to load data into database](https://github.com/MarvinBarahona/Applaudo-Test/wiki/Installation#load-database)
 
 Also in the installation guide, is instructions on [how to import the Postman collection](https://github.com/MarvinBarahona/Applaudo-Test/wiki/Installation#postman-collection) (in the "postman" folder of this repository) to test the API, both locally and deployed as demo.
@@ -41,4 +41,4 @@ Of course, here's a link to check the [API reference in the wiki](https://github
 
 ***
 ## Changelog
-Current version is v0.0.2. See the [full list of versions and changelog in the wiki](https://github.com/MarvinBarahona/Applaudo-Test/wiki/Changelog)
+Current version is v0.1.0. See the [full list of versions and changelog in the wiki](https://github.com/MarvinBarahona/Applaudo-Test/wiki/Changelog)
