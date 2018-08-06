@@ -1,3 +1,6 @@
-// Load all model of this folder. 
+// Load all model of this folder.
 
-require("./test");
+require("./test/test");
+
+require("./security/user");
+require("./security/role");
