@@ -45,7 +45,7 @@ app.use(function(err, req, res, next){
   var status = err.status || 500;
   var errors = err.errors;
 
-  if(code = 500) errors = ["Server error, please report!"];
+  if(status == 500) errors = ["Server error, please report!"];
 
   res.status(status).json({errors: errors});
 });

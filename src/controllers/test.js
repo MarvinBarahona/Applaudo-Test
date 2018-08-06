@@ -1,6 +1,7 @@
 // Get mongoose model.
 const TestData = require("mongoose").model("testData");
 
+// Route: /api/v1/test
 // Get dump data
 function getTestData(req, res, next){
 
@@ -13,4 +14,5 @@ function getTestData(req, res, next){
 }
 
 
+// Module exports. 
 module.exports = {get: getTestData};

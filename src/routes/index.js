@@ -1,5 +1,6 @@
 const express = require('express');
 const testRoutes = require('./test');
+const authRoutes = require('./auth');
 
 // Router object.
 const router = express.Router();
@@ -11,6 +12,7 @@ router.get('/', (req, res)=>{
 
 // Join all routers.
 router.use('/test', testRoutes);
+router.use('/login', authRoutes);
 
 // Export the router.
 module.exports = router;
