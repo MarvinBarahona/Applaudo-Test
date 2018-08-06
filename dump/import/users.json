@@ -1,0 +1,3 @@
+{"_id":{"$oid":"5b688567a6ab94154a5699b8"},"username":"admin","name":"Chris Pratt","password":"$2b$10$w29H2W.zViHXx0bCYinA.e2peimnTzgDzUQZdHpibC7uz4w.hJBRK","roleId":{"$oid":"5b688276d8f2e3154af25703"}}
+{"_id":{"$oid":"5b68862fd8f2e3154af25705"},"username":"client1","name":"Dave Bautista","password":"$2b$10$xCtcHNB1Cxzq8rFgW509UuS/K32B7pgLcM/AKyLWReEjJlpwW3yOu","roleId":{"$oid":"5b68827ed8f2e3154af25704"}}
+{"_id":{"$oid":"5b68868ed8f2e3154af25706"},"username":"client2","name":"Zoe Saldaña","password":"$2b$10$4PAg9sbKRcYBEVr/LkeVOOBT9z4bEa0CpzY9K7HyUHrjGn9ART3PC","roleId":{"$oid":"5b68827ed8f2e3154af25704"}}
