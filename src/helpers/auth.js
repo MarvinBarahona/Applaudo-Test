@@ -23,10 +23,10 @@ function checkToken(req, res, next){
   // Return failure response.
   }).catch(function(error){
     // Anonymous user fail: token needed.
-    if(error.name == 'NotAllowed' && token == "") res.status(401).json({errors: ["Need a token to access"]});
+    if(error.name == 'NotAllowed' && req.object.auth == "") res.status(401).json({errors: ["Need a token to access"]});
 
     // Logged user fail: not allowed.
-    else if(error.name == 'NotAllowed' && token != "") res.status(403).json({errors: ["Token not allowed to access"]});
+    else if(error.name == 'NotAllowed' && req.object.auth != "") res.status(403).json({errors: ["Token not allowed to access"]});
 
     // Token expired.
     else if(error.name == 'TokenExpiredError') res.status(401).json({errors: ["Expired token"]});
