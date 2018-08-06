@@ -16,8 +16,39 @@ app.use(bodyParser.json());
 // Log request and response status in console.
 app.use(morgan('tiny'));
 
+// Set the request object in all request.
+app.use(function(req, res, next){
+  var token = req.headers.authorization || "";
+  var uri = req.url;
+  var method = req.method;
+
+  var body = {};
+
+  if(method == 'POST' || method == 'PATCH' || method == 'PUT') body = req.body;
+  else if(method == 'GET') body = req.query;
+
+  req.object = {
+    uri: uri,
+    method: method,
+    body: body,
+    auth: token
+  }
+
+  next();
+});
+
 // Set app routes.
 app.use("/api/v1/", routes);
+
+// Error handler.
+app.use(function(err, req, res, next){
+  var status = err.status || 500;
+  var errors = err.errors;
+
+  if(status == 500) errors = ["Server error, please report!"];
+
+  res.status(status).json({errors: errors});
+});
 
 // Start app.
 app.listen(port, () => {
