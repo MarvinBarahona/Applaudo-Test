@@ -1,6 +1,6 @@
 {
   "name": "applaudo-test",
-  "version": "0.0.2",
+  "version": "0.1.0",
   "description": "Test project for Applaudo recruitment process",
   "main": "src/index.js",
   "scripts": {

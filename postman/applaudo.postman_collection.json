@@ -7,8 +7,11 @@
 	},
 	"item": [
 		{
-			"name": "home",
+			"name": "Test - Home",
 			"request": {
+				"auth": {
+					"type": "noauth"
+				},
 				"method": "GET",
 				"header": [],
 				"body": {
@@ -30,8 +33,11 @@
 			"response": []
 		},
 		{
-			"name": "Test data",
+			"name": "Test - Get data",
 			"request": {
+				"auth": {
+					"type": "noauth"
+				},
 				"method": "GET",
 				"header": [],
 				"body": {},
@@ -49,8 +55,120 @@
 				"description": "Gets database dump data"
 			},
 			"response": []
+		},
+		{
+			"name": "Test - Get data (client only)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{server}}/api/v1/test/client",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"test",
+						"client"
+					]
+				},
+				"description": "Gets database dump data"
+			},
+			"response": []
+		},
+		{
+			"name": "Test - Get data (admin only)",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{server}}/api/v1/test/admin",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"test",
+						"admin"
+					]
+				},
+				"description": "Gets database dump data"
+			},
+			"response": []
+		},
+		{
+			"name": "Auth - Login",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t\"username\": \"admin\",\n\t\"password\": \"8YTNvti9nr\"\n}"
+				},
+				"url": {
+					"raw": "{{server}}/api/v1/login",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"login"
+					]
+				},
+				"description": "Authenticate users, using a username and password."
+			},
+			"response": []
+		},
+		{
+			"name": "Auth - My profile",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"body": {},
+				"url": {
+					"raw": "{{server}}/api/v1/me",
+					"host": [
+						"{{server}}"
+					],
+					"path": [
+						"api",
+						"v1",
+						"me"
+					]
+				},
+				"description": "Get the current user profile"
+			},
+			"response": []
 		}
 	],
+	"auth": {
+		"type": "oauth2",
+		"oauth2": [
+			{
+				"key": "accessToken",
+				"value": "<<Insert your token>>",
+				"type": "string"
+			},
+			{
+				"key": "addTokenTo",
+				"value": "header",
+				"type": "string"
+			}
+		]
+	},
 	"event": [
 		{
 			"listen": "prerequest",
