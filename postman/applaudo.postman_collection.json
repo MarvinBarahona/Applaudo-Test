@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "993e0e07-b92e-47e8-8aaa-c12837db247b",
+		"_postman_id": "7e350f61-cc09-4da3-9f2b-8f616c00ce17",
 		"name": "applaudo",
 		"description": "Applaudo Test API collection; use for test. ",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -11,11 +11,18 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {},
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
 				"url": {
-					"raw": "{{server}}",
+					"raw": "{{server}}/api/v1",
 					"host": [
 						"{{server}}"
+					],
+					"path": [
+						"api",
+						"v1"
 					]
 				},
 				"description": "Gets a greating message from the server"
@@ -29,11 +36,13 @@
 				"header": [],
 				"body": {},
 				"url": {
-					"raw": "{{server}}/test",
+					"raw": "{{server}}/api/v1/test",
 					"host": [
 						"{{server}}"
 					],
 					"path": [
+						"api",
+						"v1",
 						"test"
 					]
 				},

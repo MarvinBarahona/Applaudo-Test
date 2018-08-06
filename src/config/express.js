@@ -17,7 +17,7 @@ app.use(bodyParser.json());
 app.use(morgan('tiny'));
 
 // Set app routes.
-app.use("/", routes);
+app.use("/api/v1/", routes);
 
 // Start app.
 app.listen(port, () => {
