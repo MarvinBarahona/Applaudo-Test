@@ -12,10 +12,10 @@ function create(req, res, next){
 
   var errors = [];
 
-  if(!name || name.length == 0) errors.push("missing 'name' parameter");
+  if(name == null || name.length == 0) errors.push("missing 'name' parameter");
   else if(typeof name != 'string') errors.push("'name' mush be a string");
 
-  if(!description || description.length == 0) errors.push("missing 'description' parameter");
+  if(description == null || description.length == 0) errors.push("missing 'description' parameter");
   else if(typeof description != 'string') errors.push("'description' mush be a string");
 
   if(price == null) errors.push("missing 'price' parameter");
@@ -35,6 +35,7 @@ function create(req, res, next){
     product.price = price;
     product.stock = stock;
     product.active = true;
+    product.popularity = 0;
     product.usersLikingId = [];
 
     // Save the product.
@@ -44,14 +45,15 @@ function create(req, res, next){
       res.status(201).json({
         request: req.object,
         entity: {
-          id: _product._id,
+          _id: _product._id,
           name: _product.name,
           description: _product.description,
           price: _product.price,
           stock: _product.stock
         },
         delete: '/api/v1/products/' + _product._id,
-        patch: '/api/v1/products/' + _product._id
+        patch: '/api/v1/products/' + _product._id,
+        list: '/api/v1/products'
       });
 
     // Any error is a server error.
@@ -164,13 +166,14 @@ function update(req, res, next){
       res.status(201).json({
         request: req.object,
         entity: {
-          id: _product._id,
+          _id: _product._id,
           name: _product.name,
           description: _product.description,
           price: _product.price,
           stock: _product.stock
         },
-        delete: '/api/v1/products/' + _product._id
+        delete: '/api/v1/products/' + _product._id,
+        list: '/api/v1/products'
       });
 
     // Error responses.
@@ -182,5 +185,237 @@ function update(req, res, next){
   }
 }
 
+
+// Route: GET /api/v1/products
+// Get all the products
+function list(req, res, next){
+  // Validate params.
+  var errors = [];
+
+  // Pagination
+  const PAGE_SIZE_DEFAULT = 5;
+  var page = req.query.page != null ? parseInt(req.query.page) : 1;
+  var page_size = req.query.page_size != null ? parseInt(req.query.page_size) : PAGE_SIZE_DEFAULT;
+
+  if(!Number.isInteger(page) || page < 1) errors.push("'page' must be a positive integer");
+
+  if(!Number.isInteger(page_size) || page_size < 5 || page_size > 20) errors.push("'page_size' must be a integer between 5 and 20");
+
+  // Filtering
+  var filters_params = [];
+  var filters_fields = req.query.filter == null ? [] : req.query.filter.split(';');
+  var filters_values = req.query.filter_value == null ? [] : req.query.filter_value.split(';');
+  var filters_types = req.query.filter_type == null ? [] : req.query.filter_type.split(';');
+
+  // Error if filters parameters doesn't match size.
+  if(filters_fields.length != filters_types.length || filters_types.length != filters_values.length)
+    errors.push("filtering parameters' size mismatch");
+
+  else{
+    // Filtering options.
+    var allow_filters = [
+      {field: 'name', type: 'contains', value: 'string'},
+      {field: 'active', type: 'equal', value: 'boolean', admin: true}
+    ];
+
+    // Check if filter paramenters are valid.
+    for(var i = 0, len_params = filters_types.length; i < len_params; i++){
+      var inArray = false;
+
+      var filter_param = {
+        field: filters_fields[i].trim().toLowerCase(),
+        value: filters_values[i].trim(),
+        type: filters_types[i].trim().toLowerCase()
+      }
+
+      for(var j = 0, len_allow = allow_filters.length; j < len_allow; j++){
+        var allow_filter = allow_filters[j];
+        if(filter_param.field == allow_filter.field && filter_param.type == allow_filter.type){
+          inArray = true;
+          j = len_allow;
+
+          // Check if filter is only for admins.
+          if(allow_filter.admin != null && req.auth.role != "admin") errors.push("You are not allow to use filter '" + filter_param.field + " " + filter_param.type + "'");
+
+          // Check boolean value.
+          if(allow_filter.value == "boolean"){
+            var value = filter_param.value.toLowerCase();
+
+            if(value != "true" && value != "false") errors.push("Invalid filter value for '" + filter_param.field + " "+ filter_param.type + "': must be true or false.");
+            else{
+              filter_param.value = value == "true" ? true : false;
+            }
+          }
+        }
+      }
+
+      // If not valid, error.
+      if(!inArray) errors.push("Invalid filter: '" + filter_param.field + " "+ filter_param.type + "'");
+
+      // Else, put it on the filters_params.
+      else filters_params.push(filter_param);
+    }
+  }
+
+  // Field selection.
+  var includes = req.query.include == null ? [] : req.query.include.split(";");
+  var field_selection = {};
+
+  var allow_includes = [
+    {field: "stock", admin: true}
+  ];
+
+  // Check if include paramenters are valid.
+  for(var i = 0, len_params = includes.length; i < len_params; i++){
+    var inArray = false;
+    var include = includes[i];
+
+    for(var j = 0, len_allow = allow_includes.length; j < len_allow; j++){
+      var allow_include = allow_includes[j];
+      if(include == allow_include.field){
+        inArray = true;
+        j = len_allow;
+
+        // Check if include is only for admins.
+        if(allow_include.admin != null && req.auth.role != "admin") errors.push("You are not allow to use include '" + include + "'");
+      }
+    }
+
+    // If not valid, error.
+    if(!inArray) errors.push("Invalid include: '" + include + "'");
+    else field_selection[include] = true;
+  }
+
+  if(errors.length > 0) next({status: 400, errors: errors});
+  // End of params validation.
+
+
+  else{
+    var pages;
+
+    // Filtering.
+    var filters = {};
+
+    // Only active products.
+    filters["active"] = true;
+
+    // Add filters of the filtets_params array.
+    for(var i = 0, len = filters_params.length; i < len; i++){
+      var filter = filters_params[i];
+
+      if(filter.type == 'contains') filters[filter.field] = new RegExp(filter.value, 'i');
+      if(filter.type == "equal") filters[filter.field] = filter.value;
+    }
+
+
+    // Count all documents that match.
+    Product.countDocuments(filters).then(function(count){
+
+      // Get page size.
+      pages = Math.ceil(count / page_size);
+
+      // If no product, pages = 1.
+      if(pages == 0) pages = 1;
+
+      // Validate page value.
+      if(page > pages) return Promise.reject({name: 'InvalidPage'});
+
+
+    // Get the products.
+      else{
+
+        // Field selection.
+        var fields = {
+          name: 1,
+          description: 1,
+          price: 1,
+        }
+
+        // Possible field selection,
+        if(field_selection["stock"] == true) fields["stock"] = 1;
+
+        // Sot and pagination.
+        var options = {
+          sort: {
+            name: 1
+          },
+          skip: (page - 1) * page_size,
+          limit: page_size
+        }
+
+        return Product.find(filters, fields, options);
+      }
+    }).then(function(products){
+
+      // Success response.
+      var options = [];
+
+      // Filtering
+      if(filters_params.length > 0){
+        var filter = [], filter_value = [], filter_type = [];
+
+        for(var i = 0, len = filters_params.length; i < len; i++){
+          var filter_param = filters_params[i];
+          filter.push(filter_param.field);
+          filter_value.push(filter_param.value);
+          filter_type.push(filter_param.type);
+        }
+
+        options.push("filter=" + filter.join(";"));
+        options.push("filter_value=" + filter_value.join(";"));
+        options.push("filter_type=" + filter_type.join(";"));
+      }
+
+      // Field selection
+      var includes = [], excludes = [];
+
+      for(var field in field_selection){
+        if(field_selection[field]) includes.push(field);
+        else excludes.push(field);
+      }
+
+      if(includes.length > 0) options.push("include=" + includes.join(";"));
+      if(excludes.length > 0) options.push("exclude=" + excludes.join(";"));
+
+      var next_page = "";
+
+      if(page < pages){
+        next_page = "/api/v1/products?page=" + (page + 1);
+        if(page_size != PAGE_SIZE_DEFAULT) next_page += '&page_size=' + page_size;
+        if(options.length > 0) next_page += "&" + options.join("&");
+      }
+
+      var previous_page = "";
+
+      if(page > 1){
+        previous_page = "/api/v1/products?page=" + (page - 1);
+        if(page_size != PAGE_SIZE_DEFAULT) previous_page += '&page_size=' + page_size;
+        if(options.length > 0) previous_page += "&" + options.join("&");
+      }
+
+
+      res.status(200).json({
+        request: req.object,
+        pagination: {
+          current: page,
+          pages: pages,
+          size: page_size,
+          next: next_page,
+          previous_page: previous_page
+        },
+        filters: filters_params,
+        select: field_selection,
+        data_size: products.length,
+        data: products
+      });
+
+    // Catch errors.
+    }).catch(function(error){
+      if(error.name == 'InvalidPage') next({status:422, errors: ["page not found"]});
+      else next({status: 500});
+    });
+  }
+}
+
 // module exports.
-module.exports = {create: create, remove: remove, update: update};
+module.exports = {create: create, remove: remove, update: update, list: list};

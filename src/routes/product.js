@@ -6,6 +6,7 @@ const authHelper = require("../helpers/auth");
 
 router.route("/")
   .post(authHelper.checkToken, productController.create)
+  .get(authHelper.checkToken, productController.list)
 
 router.route("/:productId")
   .delete(authHelper.checkToken, productController.remove)
