@@ -3,7 +3,7 @@ const TestData = require("mongoose").model("testData");
 
 // Route: /api/v1/test
 // Get dump data
-function getTestData(req, res, next){
+function get(req, res, next){
 
   TestData.find({}).then(function(data){
     res.status(200).json({request: req.object, data: data});
@@ -14,5 +14,5 @@ function getTestData(req, res, next){
 }
 
 
-// Module exports. 
-module.exports = {get: getTestData};
+// Module exports.
+module.exports = {get: get};

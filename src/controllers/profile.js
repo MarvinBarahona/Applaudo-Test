@@ -1,6 +1,8 @@
 const User = require("mongoose").model('users');
 
-function getProfile(req, res, next){
+// Route: GET /api/v1/me
+// Get profile data.
+function get(req, res, next){
 
   // Get the current user.
   User.findOne({username: req.auth.user}).then(function(user){
@@ -15,10 +17,10 @@ function getProfile(req, res, next){
       }
     });
 
-  // Any error is a server error. 
+  // Any error is a server error.
   }).catch(next);
 }
 
 
 // Module exports.
-module.exports = {getProfile: getProfile};
+module.exports = {get: get};
