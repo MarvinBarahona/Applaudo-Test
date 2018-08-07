@@ -18,10 +18,10 @@ function create(req, res, next){
   if(!description || description.length == 0) errors.push("missing 'description' parameter");
   else if(typeof description != 'string') errors.push("'description' mush be a string");
 
-  if(!price) errors.push("missing 'price' parameter");
+  if(price == null) errors.push("missing 'price' parameter");
   else if(!Number.isInteger(price) || price < 1) errors.push("'price' must be a positive integer");
 
-  if(!stock) errors.push("missing 'stock' parameter");
+  if(stock == null) errors.push("missing 'stock' parameter");
   else if(!Number.isInteger(stock) || stock < 1) errors.push("'stock' must be a positive integer");
 
   if(errors.length > 0) next({status: 400, errors: errors});
@@ -120,11 +120,11 @@ function update(req, res, next){
 
   var errors = [];
 
-  if(!price && !stock) errors.push("Send 'price' and / or 'stock' parameter");
+  if(price == null && stock == null) errors.push("Send 'price' and / or 'stock' parameter");
   else{
-    if(price && (!Number.isInteger(price) || price < 1)) errors.push("'price' must be a positive integer");
+    if(price != null && (!Number.isInteger(price) || price < 1)) errors.push("'price' must be a positive integer");
 
-    if(stock && (!Number.isInteger(stock) || stock < 1)) errors.push("'stock' must be a positive integer");
+    if(stock != null && (!Number.isInteger(stock) || stock < 0)) errors.push("'stock' must be a positive integer or zero");
   }
 
   if(errors.length > 0) next({status: 400, errors: errors});
@@ -148,14 +148,14 @@ function update(req, res, next){
         log.type = 'update';
         log.date = Date.now();
 
-        if(price) log.changes.push({field: 'price', value: price, diff: price - product.price});
-        if(stock) log.changes.push({field: 'stock', value: stock, diff: stock - product.stock});
+        if(price != null) log.changes.push({field: 'price', value: price, diff: price - product.price});
+        if(stock != null) log.changes.push({field: 'stock', value: stock, diff: stock - product.stock});
 
         log.save();
 
         // Set values.
-        product.price = price || product.price;
-        product.stock = stock || product.stock;
+        product.price = price != null ? price : product.price;
+        product.stock = stock != null? stock : product.stock;
         return product.save();
       }
     }).then(function(_product){
