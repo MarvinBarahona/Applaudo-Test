@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "7e350f61-cc09-4da3-9f2b-8f616c00ce17",
+		"_postman_id": "f69cede9-c349-4705-976e-78591dfe9731",
 		"name": "applaudo",
 		"description": "Applaudo Test API collection; use for test. ",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -40,7 +40,10 @@
 				},
 				"method": "GET",
 				"header": [],
-				"body": {},
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
 				"url": {
 					"raw": "{{server}}/api/v1/test",
 					"host": [
@@ -61,7 +64,10 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {},
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
 				"url": {
 					"raw": "{{server}}/api/v1/test/client",
 					"host": [
@@ -83,7 +89,10 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {},
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
 				"url": {
 					"raw": "{{server}}/api/v1/test/admin",
 					"host": [
@@ -115,7 +124,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n\t\"username\": \"admin\",\n\t\"password\": \"8YTNvti9nr\"\n}"
+					"raw": "{\n\t\"username\": \"client2\",\n\t\"password\": \"Vg6QEU8i1r123123\"\n}"
 				},
 				"url": {
 					"raw": "{{server}}/api/v1/login",
@@ -128,7 +137,7 @@
 						"login"
 					]
 				},
-				"description": "Authenticate users, using a username and password."
+				"description": "Authenticate users, using a username and password.\n\nTest users: \n\nAdministrator.\nusername: admin\npassword: 8YTNvti9nr\n\n\nClients.\nusername: client1\npassword: 9W343Tx9mo\n\nusername: client2\npassword: Vg6QEU8i1r"
 			},
 			"response": []
 		},
@@ -137,7 +146,10 @@
 			"request": {
 				"method": "GET",
 				"header": [],
-				"body": {},
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
 				"url": {
 					"raw": "{{server}}/api/v1/me",
 					"host": [
