@@ -12,10 +12,10 @@ function create(req, res, next){
 
   var errors = [];
 
-  if(!name || name.length == 0) errors.push("missing 'name' parameter");
+  if(name == null || name.length == 0) errors.push("missing 'name' parameter");
   else if(typeof name != 'string') errors.push("'name' mush be a string");
 
-  if(!description || description.length == 0) errors.push("missing 'description' parameter");
+  if(description == null || description.length == 0) errors.push("missing 'description' parameter");
   else if(typeof description != 'string') errors.push("'description' mush be a string");
 
   if(price == null) errors.push("missing 'price' parameter");
@@ -44,7 +44,7 @@ function create(req, res, next){
       res.status(201).json({
         request: req.object,
         entity: {
-          id: _product._id,
+          _id: _product._id,
           name: _product.name,
           description: _product.description,
           price: _product.price,
@@ -164,7 +164,7 @@ function update(req, res, next){
       res.status(201).json({
         request: req.object,
         entity: {
-          id: _product._id,
+          _id: _product._id,
           name: _product.name,
           description: _product.description,
           price: _product.price,
