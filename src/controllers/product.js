@@ -1,4 +1,5 @@
 const Product = require("mongoose").model("products");
+const ProductLog = require("mongoose").model("product_logs");
 
 // Route: POST /api/v1/products
 // Create a product
@@ -125,8 +126,21 @@ function update(req, res, next){
       // If already deleted.
       else if(product.active == false) return Promise.reject({name: "AlreadyDeleted"});
 
-      // Set values.
+      // Update the product.
       else{
+        // Save product log.
+        var log = new ProductLog();
+        log.productId = product.id;
+        log.userId = req.auth.user;
+        log.type = 'update';
+        log.date = Date.now();
+
+        if(price) log.changes.push({field: 'price', value: price, diff: price - product.price});
+        if(stock) log.changes.push({field: 'stock', value: stock, diff: stock - product.stock});
+
+        log.save();
+
+        // Set values.
         product.price = price || product.price;
         product.stock = stock || product.stock;
         return product.save();

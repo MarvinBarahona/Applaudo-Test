@@ -49,7 +49,7 @@ function login(req, res, next){
     // Create JWT and return success response.
       else{
         role = _role;
-        return jwtHelper.getToken({user: user.username, role: role.name})
+        return jwtHelper.getToken({user: user._id, role: role.name})
       }
     }).then(function(token){
       res.status(200).json({
