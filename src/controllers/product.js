@@ -234,7 +234,7 @@ function list(req, res, next){
           inArray = true;
           j = len_allow;
 
-          // Check if filter is only for admins. 
+          // Check if filter is only for admins.
           if(allow_filter.admin != null && req.auth.role != "admin") errors.push("You are not allow to use filter '" + filter_param.field + " " + filter_param.type + "'");
 
           // Check boolean value.
@@ -255,6 +255,35 @@ function list(req, res, next){
       // Else, put it on the filters_params.
       else filters_params.push(filter_param);
     }
+  }
+
+  // Field selection.
+  var includes = req.query.include == null ? [] : req.query.include.split(";");
+  var field_selection = {};
+
+  var allow_includes = [
+    {field: "stock", admin: true}
+  ];
+
+  // Check if include paramenters are valid.
+  for(var i = 0, len_params = includes.length; i < len_params; i++){
+    var inArray = false;
+    var include = includes[i];
+
+    for(var j = 0, len_allow = allow_includes.length; j < len_allow; j++){
+      var allow_include = allow_includes[j];
+      if(include == allow_include.field){
+        inArray = true;
+        j = len_allow;
+
+        // Check if include is only for admins.
+        if(allow_include.admin != null && req.auth.role != "admin") errors.push("You are not allow to use include '" + include + "'");
+      }
+    }
+
+    // If not valid, error.
+    if(!inArray) errors.push("Invalid include: '" + include + "'");
+    else field_selection[include] = true;
   }
 
   if(errors.length > 0) next({status: 400, errors: errors});
@@ -297,11 +326,13 @@ function list(req, res, next){
 
         // Field selection.
         var fields = {
-          id: 1,
           name: 1,
           description: 1,
-          price: 1
+          price: 1,
         }
+
+        // Possible field selection,
+        if(field_selection["stock"] == true) fields["stock"] = 1;
 
         // Sot and pagination.
         var options = {
@@ -342,6 +373,7 @@ function list(req, res, next){
           previous_page: previous_page
         },
         filters: filters_params,
+        select: field_selection,
         data: products
       });
 
