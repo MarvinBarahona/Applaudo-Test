@@ -213,15 +213,19 @@ function list(req, res, next){
 
   else{
     // Filtering options.
-    var allow_filters = [{field: 'name', type: 'contains'}];
+    var allow_filters = [
+      {field: 'name', type: 'contains', value: 'string'},
+      {field: 'active', type: 'equal', value: 'boolean', admin: true}
+    ];
 
     // Check if filter paramenters are valid.
     for(var i = 0, len_params = filters_types.length; i < len_params; i++){
       var inArray = false;
+
       var filter_param = {
-        field: filters_fields[i],
-        value: filters_values[i],
-        type: filters_types[i]
+        field: filters_fields[i].trim().toLowerCase(),
+        value: filters_values[i].trim(),
+        type: filters_types[i].trim().toLowerCase()
       }
 
       for(var j = 0, len_allow = allow_filters.length; j < len_allow; j++){
@@ -229,17 +233,28 @@ function list(req, res, next){
         if(filter_param.field == allow_filter.field && filter_param.type == allow_filter.type){
           inArray = true;
           j = len_allow;
+
+          // Check if filter is only for admins. 
+          if(allow_filter.admin != null && req.auth.role != "admin") errors.push("You are not allow to use filter '" + filter_param.field + " " + filter_param.type + "'");
+
+          // Check boolean value.
+          if(allow_filter.value == "boolean"){
+            var value = filter_param.value.toLowerCase();
+
+            if(value != "true" && value != "false") errors.push("Invalid filter value for '" + filter_param.field + " "+ filter_param.type + "': must be true or false.");
+            else{
+              filter_param.value = value == "true" ? true : false;
+            }
+          }
         }
       }
 
       // If not valid, error.
-      if(!inArray) errors.push("Invalid filter: " + filters_fields[i] + " "+ filters_types[i]);
+      if(!inArray) errors.push("Invalid filter: '" + filter_param.field + " "+ filter_param.type + "'");
 
       // Else, put it on the filters_params.
       else filters_params.push(filter_param);
     }
-
-    // TODO: value type validation.
   }
 
   if(errors.length > 0) next({status: 400, errors: errors});
@@ -260,6 +275,7 @@ function list(req, res, next){
       var filter = filters_params[i];
 
       if(filter.type == 'contains') filters[filter.field] = new RegExp(filter.value, 'i');
+      if(filter.type == "equal") filters[filter.field] = filter.value;
     }
 
 
@@ -329,7 +345,7 @@ function list(req, res, next){
         data: products
       });
 
-    // Catch errors. 
+    // Catch errors.
     }).catch(function(error){
       if(error.name == 'InvalidPage') next({status:422, errors: ["page not found"]});
       else next({status: 500});
