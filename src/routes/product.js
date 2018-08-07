@@ -9,5 +9,6 @@ router.route("/")
 
 router.route("/:productId")
   .delete(authHelper.checkToken, productController.remove)
+  .patch(authHelper.checkToken, productController.update)
 
 module.exports = router;
