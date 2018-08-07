@@ -1,5 +1,7 @@
 const Product = require("mongoose").model("products");
 
+// Route: POST /api/v1/products
+// Create a product
 function create(req, res, next){
   // Body validation
   var name = req.body.name;
@@ -37,7 +39,7 @@ function create(req, res, next){
     // Save the product.
     product.save().then(function(_product){
 
-      // Success response. 
+      // Success response.
       res.status(201).json({
         request: req.object,
         entity: {
@@ -46,7 +48,8 @@ function create(req, res, next){
           description: _product.description,
           price: _product.price,
           stock: _product.stock
-        }
+        },
+        delete: '/api/v1/products/' + _product._id
       });
 
     // Any error is a server error.
@@ -55,5 +58,41 @@ function create(req, res, next){
 }
 
 
+// Route: DELETE /api/v1/products/:productId
+// Delete a product.
+function remove(req, res, next){
+  var id = req.params.productId;
+
+  // Find the product.
+  Product.findById(id).then(function(product){
+    // If not found.
+    if(!product) return Promise.reject({name: "NotFound"});
+
+    // If already deleted.
+    else if(product.active == false) return Promise.reject({name: "AlreadyDeleted"});
+
+    // Can't delete a product with stock.
+    else if(product.stock > 0) return Promise.reject({name: "HasStock"});
+
+    // Soft delete.
+    else{
+      product.active = false;
+      return product.save();
+    }
+  }).then(function(_product){
+
+    // Success response.
+    res.status(204).json();
+
+  // Error responses.
+  }).catch(function(error){
+    if(error.name == "NotFound" || error.name == "CastError" || error.name == 'AlreadyDeleted')
+      next({status: 404, errors: ["product not found"]});
+    else if(error.name == "HasStock") next({status: 422, errors: ["can't delete product with stock"]});
+    else next(error);
+  });
+}
+
+
 // module exports.
-module.exports = {create: create};
+module.exports = {create: create, remove: remove};

@@ -1,5 +1,7 @@
 const User = require("mongoose").model('users');
 
+// Route: GET /api/v1/me
+// Get profile data.
 function get(req, res, next){
 
   // Get the current user.
