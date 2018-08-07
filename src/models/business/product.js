@@ -7,6 +7,7 @@ const ProductSchema = new mongoose.Schema({
   price: Number,
   stock: Number,
   active: Boolean,
+  popularity: Number,
   usersLikingId: [mongoose.Schema.Types.ObjectId]
 });
 

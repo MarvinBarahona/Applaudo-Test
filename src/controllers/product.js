@@ -35,6 +35,7 @@ function create(req, res, next){
     product.price = price;
     product.stock = stock;
     product.active = true;
+    product.popularity = 0;
     product.usersLikingId = [];
 
     // Save the product.
