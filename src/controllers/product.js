@@ -348,11 +348,41 @@ function list(req, res, next){
     }).then(function(products){
 
       // Success response.
+      var options = [];
+
+      // Filtering
+      if(filters_params.length > 0){
+        var filter = [], filter_value = [], filter_type = [];
+
+        for(var i = 0, len = filters_params.length; i < len; i++){
+          var filter_param = filters_params[i];
+          filter.push(filter_param.field);
+          filter_value.push(filter_param.value);
+          filter_type.push(filter_param.type);
+        }
+
+        options.push("filter=" + filter.join(";"));
+        options.push("filter_value=" + filter_value.join(";"));
+        options.push("filter_type=" + filter_type.join(";"));
+      }
+
+      // Field selection
+      var includes = [], excludes = [];
+
+      for(var field in field_selection){
+        if(field_selection[field]) includes.push(field);
+        else excludes.push(field);
+      }
+
+      if(includes.length > 0) options.push("include=" + includes.join(";"));
+      if(excludes.length > 0) options.push("exclude=" + excludes.join(";"));
+
       var next_page = "";
 
       if(page < pages){
         next_page = "/api/v1/products?page=" + (page + 1);
         if(page_size != PAGE_SIZE_DEFAULT) next_page += '&page_size=' + page_size;
+        if(options.length > 0) next_page += "&" + options.join("&");
       }
 
       var previous_page = "";
@@ -360,6 +390,7 @@ function list(req, res, next){
       if(page > 1){
         previous_page = "/api/v1/products?page=" + (page - 1);
         if(page_size != PAGE_SIZE_DEFAULT) previous_page += '&page_size=' + page_size;
+        if(options.length > 0) previous_page += "&" + options.join("&");
       }
 
 
