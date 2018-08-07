@@ -405,6 +405,7 @@ function list(req, res, next){
         },
         filters: filters_params,
         select: field_selection,
+        data_size: products.length,
         data: products
       });
 
