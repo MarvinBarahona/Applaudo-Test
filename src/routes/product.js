@@ -1,9 +1,9 @@
 const express = require("express");
-const profileController = require("../controllers/profile");
+const productController = require("../controllers/product");
 const router = express.Router();
 
 const authHelper = require("../helpers/auth");
 
-router.get("/", authHelper.checkToken, profileController.get);
+router.post("/", authHelper.checkToken, productController.create);
 
 module.exports = router;
