@@ -19,7 +19,7 @@ app.use(morgan('tiny'));
 // Set the request object in all request.
 app.use(function(req, res, next){
   var token = req.headers.authorization || "";
-  var uri = req.url;
+  var uri = req.path;
   var method = req.method;
 
   var body = {};
