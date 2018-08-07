@@ -106,11 +106,12 @@ function update(req, res, next){
 
   var errors = [];
 
-  if(!price) errors.push("missing 'price' parameter");
-  else if(!Number.isInteger(price) || price < 1) errors.push("'price' must be a positive integer");
+  if(!price && !stock) errors.push("Send 'price' and / or 'stock' parameter");
+  else{
+    if(price && (!Number.isInteger(price) || price < 1)) errors.push("'price' must be a positive integer");
 
-  if(!stock) errors.push("missing 'stock' parameter");
-  else if(!Number.isInteger(stock) || stock < 1) errors.push("'stock' must be a positive integer");
+    if(stock && (!Number.isInteger(stock) || stock < 1)) errors.push("'stock' must be a positive integer");
+  }
 
   if(errors.length > 0) next({status: 400, errors: errors});
   // End body validation.
@@ -126,8 +127,8 @@ function update(req, res, next){
 
       // Set values.
       else{
-        product.price = price;
-        product.stock = stock;
+        product.price = price || product.price;
+        product.stock = stock || product.stock;
         return product.save();
       }
     }).then(function(_product){
