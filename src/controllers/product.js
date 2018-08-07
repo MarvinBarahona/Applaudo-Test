@@ -78,6 +78,19 @@ function remove(req, res, next){
 
     // Soft delete.
     else{
+
+      // Save log
+      var log = new ProductLog();
+      log.productId = product.id;
+      log.userId = req.auth.user;
+      log.type = 'delete';
+      log.date = Date.now();
+
+      log.changes.push({field: 'active', value: false, diff: 'change from true to false'});
+
+      log.save();
+
+      // Set value and save
       product.active = false;
       return product.save();
     }
