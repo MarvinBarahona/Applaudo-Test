@@ -41,6 +41,21 @@ function create(req, res, next){
     // Save the product.
     product.save().then(function(_product){
 
+      // Save log
+      var log = new ProductLog();
+      log.productId = product.id;
+      log.userId = req.auth.user;
+      log.type = 'create';
+      log.date = Date.now();
+
+      log.changes.push(
+        {field: 'active', value: product.active, diff: 'set to ' + product.active},
+        {field: 'price', value: product.price, diff: 'set to ' + product.price},
+        {field: 'stock', value: product.stock, diff: 'set to ' + product.stock}
+      );
+
+      log.save();
+
       // Success response.
       res.status(201).json({
         request: req.object,
@@ -81,6 +96,11 @@ function remove(req, res, next){
     // Soft delete.
     else{
 
+      var prev_active = product.active;
+
+      // Set value and save
+      product.active = false;
+
       // Save log
       var log = new ProductLog();
       log.productId = product.id;
@@ -88,12 +108,10 @@ function remove(req, res, next){
       log.type = 'delete';
       log.date = Date.now();
 
-      log.changes.push({field: 'active', value: false, diff: 'change from true to false'});
+      log.changes.push({field: 'active', value: product.active, diff: 'change from ' + prev_active + ' to ' + product.active});
 
       log.save();
 
-      // Set value and save
-      product.active = false;
       return product.save();
     }
   }).then(function(_product){
