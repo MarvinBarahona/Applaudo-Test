@@ -1,6 +1,8 @@
 const Product = require("mongoose").model("products");
 const ProductLog = require("mongoose").model("product_logs");
 
+// Route: POST /api/v1/:productId/purchases
+// Purchase a product. 
 function purchase(req, res, next){
   var id = req.params.productId;
   // Validate body
@@ -65,6 +67,7 @@ function purchase(req, res, next){
             description: product.description,
             price: product.price
           },
+          list: "api/v1/me/purchases"
         }
       });
 
