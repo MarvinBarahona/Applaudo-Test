@@ -7,163 +7,355 @@
 	},
 	"item": [
 		{
-			"name": "Test - Home",
-			"request": {
-				"auth": {
-					"type": "noauth"
+			"name": "Test",
+			"description": "Test routes\n",
+			"item": [
+				{
+					"name": "Test - Home",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{server}}/api/v1",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"v1"
+							]
+						},
+						"description": "Gets a greating message from the server"
+					},
+					"response": []
 				},
-				"method": "GET",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
+				{
+					"name": "Test - Get data",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{server}}/api/v1/test",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"test"
+							]
+						},
+						"description": "Gets database dump data"
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "{{server}}/api/v1",
-					"host": [
-						"{{server}}"
-					],
-					"path": [
-						"api",
-						"v1"
-					]
+				{
+					"name": "Test - Get data (client only)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{server}}/api/v1/test/client",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"test",
+								"client"
+							]
+						},
+						"description": "Gets database dump data, only to clients"
+					},
+					"response": []
 				},
-				"description": "Gets a greating message from the server"
-			},
-			"response": []
+				{
+					"name": "Test - Get data (admin only)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{server}}/api/v1/test/admin",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"test",
+								"admin"
+							]
+						},
+						"description": "Gets database dump data, only to admins"
+					},
+					"response": []
+				}
+			]
 		},
 		{
-			"name": "Test - Get data",
-			"request": {
-				"auth": {
-					"type": "noauth"
+			"name": "Auth",
+			"description": "Auth routes",
+			"item": [
+				{
+					"name": "Auth - Login",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"username\": \"admin\",\n\t\"password\": \"8YTNvti9nr\"\n}"
+						},
+						"url": {
+							"raw": "{{server}}/api/v1/login",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"login"
+							]
+						},
+						"description": "Authenticate users, using a username and password.\n\nTest users: \n\nAdministrator.\nusername: admin\npassword: 8YTNvti9nr\n\n\nClients.\nusername: client1\npassword: 9W343Tx9mo\n\nusername: client2\npassword: Vg6QEU8i1r"
+					},
+					"response": []
 				},
-				"method": "GET",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
-				"url": {
-					"raw": "{{server}}/api/v1/test",
-					"host": [
-						"{{server}}"
-					],
-					"path": [
-						"api",
-						"v1",
-						"test"
-					]
-				},
-				"description": "Gets database dump data"
-			},
-			"response": []
+				{
+					"name": "Auth - My profile",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{server}}/api/v1/me",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"me"
+							]
+						},
+						"description": "Get the current user profile"
+					},
+					"response": []
+				}
+			]
 		},
 		{
-			"name": "Test - Get data (client only)",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
+			"name": "Products",
+			"description": "",
+			"item": [
+				{
+					"name": "Products - Create",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"name\": \"Croutons\", \n\t\"description\": \"A bag of croutons\",\n\t\"price\": 100,\n\t\"stock\": 20\n}"
+						},
+						"url": {
+							"raw": "{{server}}/api/v1/products",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"products"
+							]
+						},
+						"description": "Create a new product"
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "{{server}}/api/v1/test/client",
-					"host": [
-						"{{server}}"
-					],
-					"path": [
-						"api",
-						"v1",
-						"test",
-						"client"
-					]
+				{
+					"name": "Products - Delete",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{server}}/api/v1/products/5b6a65ddd2e01c13fa443742",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"products",
+								"5b6a65ddd2e01c13fa443742"
+							]
+						},
+						"description": "Delete a product"
+					},
+					"response": []
 				},
-				"description": "Gets database dump data"
-			},
-			"response": []
-		},
-		{
-			"name": "Test - Get data (admin only)",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
+				{
+					"name": "Products - Update",
+					"request": {
+						"method": "PATCH",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"stock\": 10,\n\t\"price\": 200\n}"
+						},
+						"url": {
+							"raw": "{{server}}/api/v1/products/5b6a679ed2e01c13fa44376a",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"products",
+								"5b6a679ed2e01c13fa44376a"
+							]
+						},
+						"description": "Update a product"
+					},
+					"response": []
 				},
-				"url": {
-					"raw": "{{server}}/api/v1/test/admin",
-					"host": [
-						"{{server}}"
-					],
-					"path": [
-						"api",
-						"v1",
-						"test",
-						"admin"
-					]
+				{
+					"name": "Products - List",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{server}}/api/v1/products?page=1&page_size=5",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"products"
+							],
+							"query": [
+								{
+									"key": "page",
+									"value": "1"
+								},
+								{
+									"key": "page_size",
+									"value": "5"
+								}
+							]
+						},
+						"description": "The list of products."
+					},
+					"response": []
 				},
-				"description": "Gets database dump data"
-			},
-			"response": []
-		},
-		{
-			"name": "Auth - Login",
-			"request": {
-				"auth": {
-					"type": "noauth"
+				{
+					"name": "Products - List (Field selection)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{server}}/api/v1/products?include=stock",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"products"
+							],
+							"query": [
+								{
+									"key": "include",
+									"value": "stock"
+								}
+							]
+						},
+						"description": "The list of products, with field selection."
+					},
+					"response": []
 				},
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n\t\"username\": \"client2\",\n\t\"password\": \"Vg6QEU8i1r123123\"\n}"
-				},
-				"url": {
-					"raw": "{{server}}/api/v1/login",
-					"host": [
-						"{{server}}"
-					],
-					"path": [
-						"api",
-						"v1",
-						"login"
-					]
-				},
-				"description": "Authenticate users, using a username and password.\n\nTest users: \n\nAdministrator.\nusername: admin\npassword: 8YTNvti9nr\n\n\nClients.\nusername: client1\npassword: 9W343Tx9mo\n\nusername: client2\npassword: Vg6QEU8i1r"
-			},
-			"response": []
-		},
-		{
-			"name": "Auth - My profile",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"body": {
-					"mode": "raw",
-					"raw": ""
-				},
-				"url": {
-					"raw": "{{server}}/api/v1/me",
-					"host": [
-						"{{server}}"
-					],
-					"path": [
-						"api",
-						"v1",
-						"me"
-					]
-				},
-				"description": "Get the current user profile"
-			},
-			"response": []
+				{
+					"name": "Products - List (Search by name)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{server}}/api/v1/products?filter=name&filter_value=ice&filter_type=contains",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"products"
+							],
+							"query": [
+								{
+									"key": "filter",
+									"value": "name"
+								},
+								{
+									"key": "filter_value",
+									"value": "ice"
+								},
+								{
+									"key": "filter_type",
+									"value": "contains"
+								}
+							]
+						},
+						"description": "The list of products, searching by name"
+					},
+					"response": []
+				}
+			]
 		}
 	],
 	"auth": {
@@ -171,7 +363,7 @@
 		"oauth2": [
 			{
 				"key": "accessToken",
-				"value": "<<Insert your token>>",
+				"value": "<<insert-your-token>>",
 				"type": "string"
 			},
 			{

@@ -1,3 +1,3 @@
-{"_id":{"$oid":"5b68767f620acd0fc71cf42e"},"name":"anonymous","permissions":[]}
-{"_id":{"$oid":"5b688276d8f2e3154af25703"},"name":"admin","permissions":["GET /api/v1/me","GET /api/v1/test/admin"]}
-{"_id":{"$oid":"5b68827ed8f2e3154af25704"},"name":"client","permissions":["GET /api/v1/me","GET /api/v1/test/client"]}
+{"_id":{"$oid":"5b68767f620acd0fc71cf42e"},"name":"anonymous","permissions":["GET /api/v1/products"]}
+{"_id":{"$oid":"5b688276d8f2e3154af25703"},"name":"admin","permissions":["GET /api/v1/me","GET /api/v1/test/admin","POST /api/v1/products","PATCH /api/v1/products/:productId","DELETE /api/v1/products/:productId","GET /api/v1/products"]}
+{"_id":{"$oid":"5b68827ed8f2e3154af25704"},"name":"client","permissions":["GET /api/v1/me","GET /api/v1/test/client","GET /api/v1/products"]}

@@ -35,7 +35,7 @@ In order to facilitate testing this API, there's a database dump in the folder "
 
 Also in the installation guide, is instructions on [how to import the Postman collection](https://github.com/MarvinBarahona/Applaudo-Test/wiki/Installation#postman-collection) (in the "postman" folder of this repository) to test the API, both locally and deployed as demo.
 
-**Note**: Test users' credentials are specified in the Login route of the postman collection. 
+**Note**: Test users' credentials are specified in the Login route of the postman collection.
 
 ***
 ## API reference
@@ -43,4 +43,4 @@ Of course, here's a link to check the [API reference in the wiki](https://github
 
 ***
 ## Changelog
-Current version is v0.1.1. See the [full list of versions and changelog in the wiki](https://github.com/MarvinBarahona/Applaudo-Test/wiki/Changelog)
+Current version is v0.2.0. See the [full list of versions and changelog in the wiki](https://github.com/MarvinBarahona/Applaudo-Test/wiki/Changelog)
