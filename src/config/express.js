@@ -19,7 +19,7 @@ app.use(morgan('tiny'));
 // Set the request object in all request.
 app.use(function(req, res, next){
   var token = req.headers.authorization || "";
-  var uri = req.url;
+  var uri = req.path;
   var method = req.method;
 
   var body = {};
@@ -45,7 +45,10 @@ app.use(function(err, req, res, next){
   var status = err.status || 500;
   var errors = err.errors;
 
-  if(status == 500) errors = ["Server error, please report!"];
+  if(status == 500){
+    errors = ["Server error, please report!"];
+    console.log(err);
+  }
 
   res.status(status).json({errors: errors});
 });
