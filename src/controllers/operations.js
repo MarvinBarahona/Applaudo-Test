@@ -136,6 +136,50 @@ function like(req, res, next){
   });
 }
 
+// Route: DELETE /api/v1/:productId/likes
+// Unlike a product.
+function unlike(req, res, next){
+  var id = req.params.productId;
+
+  // Find product.
+  Product.findById(id).then(function(product){
+
+    // If not found.
+    if(!product) return Promise.reject({name: "NotFound"});
+
+    // Check if liked
+    else{
+      var liked = false;
+
+      for(var i = 0, len = product.usersLikingId.length; i < len; i++){
+        if(product.usersLikingId[i] == req.auth.user){
+          liked = true;
+          i = len;
+        }
+      }
+
+      if(!liked) return Promise.reject({name: "NotLiked"});
+
+      // Else, decrease popularity and remove from array.
+      else{
+        product.usersLikingId = product.usersLikingId.filter(function(like){return like != req.auth.user});
+        product.popularity--;
+
+        return product.save();
+      }
+    }
+  }).then(function(product){
+
+    // Success response.
+    res.status(204).json();
+
+  }).catch(function(error){
+    if(error.name == "NotFound" || error.name == "CastError") next({status: 404, errors: ["product not found"]});
+    else if(error.name == "NotLiked") next({status: 404, errors: ["like not found"]});
+    else next({status: 500});
+  });
+}
+
 
 // Module exports
-module.exports = {purchase: purchase, like: like};
+module.exports = {purchase: purchase, like: like, unlike: unlike};
