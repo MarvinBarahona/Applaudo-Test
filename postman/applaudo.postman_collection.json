@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "f69cede9-c349-4705-976e-78591dfe9731",
+		"_postman_id": "1d7f36ba-d4b6-440e-84d9-f8f9b929f4f5",
 		"name": "applaudo",
 		"description": "Applaudo Test API collection; use for test. ",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
@@ -179,7 +179,7 @@
 		},
 		{
 			"name": "Products",
-			"description": "",
+			"description": null,
 			"item": [
 				{
 					"name": "Products - Create",
@@ -215,7 +215,10 @@
 					"request": {
 						"method": "DELETE",
 						"header": [],
-						"body": {},
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
 							"raw": "{{server}}/api/v1/products/5b6a65ddd2e01c13fa443742",
 							"host": [
@@ -244,10 +247,10 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n\t\"stock\": 10,\n\t\"price\": 200\n}"
+							"raw": "{\n\t\"stock\": 0\n}"
 						},
 						"url": {
-							"raw": "{{server}}/api/v1/products/5b6a679ed2e01c13fa44376a",
+							"raw": "{{server}}/api/v1/products/5b6a65ddd2e01c13fa443742",
 							"host": [
 								"{{server}}"
 							],
@@ -255,7 +258,7 @@
 								"api",
 								"v1",
 								"products",
-								"5b6a679ed2e01c13fa44376a"
+								"5b6a65ddd2e01c13fa443742"
 							]
 						},
 						"description": "Update a product"
@@ -269,7 +272,7 @@
 						"header": [],
 						"body": {},
 						"url": {
-							"raw": "{{server}}/api/v1/products?page=1&page_size=5",
+							"raw": "{{server}}/api/v1/products?page_size=6",
 							"host": [
 								"{{server}}"
 							],
@@ -280,12 +283,8 @@
 							],
 							"query": [
 								{
-									"key": "page",
-									"value": "1"
-								},
-								{
 									"key": "page_size",
-									"value": "5"
+									"value": "6"
 								}
 							]
 						},
@@ -294,13 +293,50 @@
 					"response": []
 				},
 				{
+					"name": "Products - List (Sort by popularity)",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{server}}/api/v1/products?sort=popularity;name&sort_order=DESC;DESC",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"products"
+							],
+							"query": [
+								{
+									"key": "sort",
+									"value": "popularity;name"
+								},
+								{
+									"key": "sort_order",
+									"value": "DESC;DESC"
+								}
+							]
+						},
+						"description": "The list of products, sorted"
+					},
+					"response": []
+				},
+				{
 					"name": "Products - List (Field selection)",
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {},
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
-							"raw": "{{server}}/api/v1/products?include=stock",
+							"raw": "{{server}}/api/v1/products?include=stock&exclude=popularity",
 							"host": [
 								"{{server}}"
 							],
@@ -313,6 +349,10 @@
 								{
 									"key": "include",
 									"value": "stock"
+								},
+								{
+									"key": "exclude",
+									"value": "popularity"
 								}
 							]
 						},
@@ -325,9 +365,12 @@
 					"request": {
 						"method": "GET",
 						"header": [],
-						"body": {},
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
 						"url": {
-							"raw": "{{server}}/api/v1/products?filter=name&filter_value=ice&filter_type=contains",
+							"raw": "{{server}}/api/v1/products?filter=name&filter_value=i&filter_type=contains",
 							"host": [
 								"{{server}}"
 							],
@@ -343,7 +386,7 @@
 								},
 								{
 									"key": "filter_value",
-									"value": "ice"
+									"value": "i"
 								},
 								{
 									"key": "filter_type",
@@ -352,6 +395,177 @@
 							]
 						},
 						"description": "The list of products, searching by name"
+					},
+					"response": []
+				},
+				{
+					"name": "Products - Inactives",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": ""
+						},
+						"url": {
+							"raw": "{{server}}/api/v1/products?filter=active&filter_value=false&filter_type=equal",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"products"
+							],
+							"query": [
+								{
+									"key": "filter",
+									"value": "active"
+								},
+								{
+									"key": "filter_value",
+									"value": "false"
+								},
+								{
+									"key": "filter_type",
+									"value": "equal"
+								}
+							]
+						},
+						"description": "The list of inactives products."
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Purchase",
+			"description": "",
+			"item": [
+				{
+					"name": "Purchase - Create",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"quantity\": 2\n}"
+						},
+						"url": {
+							"raw": "{{server}}/api/v1/products/5b6a6471d2e01c13fa44372e/purchases",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"products",
+								"5b6a6471d2e01c13fa44372e",
+								"purchases"
+							]
+						},
+						"description": "Create a new purchase"
+					},
+					"response": []
+				},
+				{
+					"name": "Purchases - Me",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{server}}/api/v1/me/purchases",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"me",
+								"purchases"
+							]
+						},
+						"description": "Get my purchases"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Liking",
+			"description": "Liking routes",
+			"item": [
+				{
+					"name": "Liking - Like",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{server}}/api/v1/products/5b6a6471d2e01c13fa44372e/likes",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"products",
+								"5b6a6471d2e01c13fa44372e",
+								"likes"
+							]
+						},
+						"description": "Like a product"
+					},
+					"response": []
+				},
+				{
+					"name": "Liking - Unlike",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{server}}/api/v1/products/5b6a6d3f2c8fb6197cc4d26c/likes",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"products",
+								"5b6a6d3f2c8fb6197cc4d26c",
+								"likes"
+							]
+						},
+						"description": "Unlike a product"
+					},
+					"response": []
+				},
+				{
+					"name": "Liking - Me",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {},
+						"url": {
+							"raw": "{{server}}/api/v1/me/likes",
+							"host": [
+								"{{server}}"
+							],
+							"path": [
+								"api",
+								"v1",
+								"me",
+								"likes"
+							]
+						},
+						"description": "Get my likes"
 					},
 					"response": []
 				}
@@ -363,7 +577,7 @@
 		"oauth2": [
 			{
 				"key": "accessToken",
-				"value": "<<insert-your-token>>",
+				"value": "<<insert_your_token>>",
 				"type": "string"
 			},
 			{
