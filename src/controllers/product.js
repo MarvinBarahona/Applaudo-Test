@@ -276,8 +276,10 @@ function list(req, res, next){
   }
 
   // Field selection.
+  var field_selection = [];
+
+  // Include
   var includes = req.query.include == null ? [] : req.query.include.split(";");
-  var field_selection = {};
 
   var allow_includes = [
     {field: "stock", admin: true}
@@ -301,7 +303,78 @@ function list(req, res, next){
 
     // If not valid, error.
     if(!inArray) errors.push("Invalid include: '" + include + "'");
-    else field_selection[include] = true;
+    else field_selection.push({field: include, type: 'include'});
+  }
+
+  // Exclude
+  var excludes = req.query.exclude == null ? [] : req.query.exclude.split(";");
+
+  var allow_excludes = [
+    {field: "popularity"}
+  ];
+
+  // Check if exclude paramenters are valid.
+  for(var i = 0, len_params = excludes.length; i < len_params; i++){
+    var inArray = false;
+    var exclude = excludes[i];
+
+    for(var j = 0, len_allow = allow_excludes.length; j < len_allow; j++){
+      var allow_exclude = allow_excludes[j];
+      if(exclude == allow_exclude.field){
+        inArray = true;
+        j = len_allow;
+
+        // Check if exclude is only for admins.
+        if(allow_exclude.admin != null && req.auth.role != "admin") errors.push("You are not allow to use exclude '" + exclude + "'");
+      }
+    }
+
+    // If not valid, error.
+    if(!inArray) errors.push("Invalid exclude: '" + exclude + "'");
+    else field_selection.push({field: exclude, type: 'exclude'});
+  }
+
+  // Sorting
+  var sorting_params = [];
+  var sort_fields = req.query.sort == null ? [] : req.query.sort.split(';');
+  var sort_order = req.query.sort_order == null ? [] : req.query.sort_order.split(';');
+
+  // Error if sorts parameters doesn't match size.
+  if(sort_fields.length != sort_order.length)
+    errors.push("sorting parameters' size mismatch");
+
+  else{
+    // Sorting options.
+    var allow_sorts = [
+      {by: 'name', order: 'ASC'},
+      {by: 'name', order: 'DESC'},
+      {by: 'popularity', order: 'ASC'},
+      {by: 'popularity', order: 'DESC'}
+    ];
+
+    // Check if sort paramenters are valid.
+    for(var i = 0, len_params = sort_fields.length; i < len_params; i++){
+      var inArray = false;
+
+      var sort_param = {
+        by: sort_fields[i].trim().toLowerCase(),
+        order: sort_order[i].trim().toUpperCase()
+      }
+
+      for(var j = 0, len_allow = allow_sorts.length; j < len_allow; j++){
+        var allow_sort = allow_sorts[j];
+        if(sort_param.by == allow_sort.by && sort_param.order == allow_sort.order){
+          inArray = true;
+          j = len_allow;
+        }
+      }
+
+      // If not valid, error.
+      if(!inArray) errors.push("Invalid sort: '" + sort_param.by + " "+ sort_param.order + "'");
+
+      // Else, put it on the sorting_params.
+      else sorting_params.push(sort_param);
+    }
   }
 
   if(errors.length > 0) next({status: 400, errors: errors});
@@ -341,25 +414,32 @@ function list(req, res, next){
 
     // Get the products.
       else{
+        var default_fields = ["name", "description", "price", "popularity"];
 
-        // Field selection.
-        var fields = {
-          name: 1,
-          description: 1,
-          price: 1,
+        for(var i = 0, len = field_selection.length; i < len; i++){
+          if(field_selection[i].type == "include") default_fields.push(field_selection[i].field);
+          else default_fields = default_fields.filter(function(_field){ return _field != this}, field_selection[i].field)
         }
 
-        // Possible field selection,
-        if(field_selection["stock"] == true) fields["stock"] = 1;
+        // Field selection.
+        var fields = {};
 
-        // Sot and pagination.
+        for(var i = 0, len = default_fields.length; i < len; i++){
+          fields[default_fields[i]] = 1
+        }
+
+        // Pagination.
         var options = {
-          sort: {
-            name: 1
-          },
+          sort: {},
           skip: (page - 1) * page_size,
           limit: page_size
         }
+
+        for(var i = 0, len = sorting_params.length; i < len; i++){
+          options.sort[sorting_params[i].by] = sorting_params[i].order == "ASC" ? 1 : -1;
+        }
+
+        if(options.sort.name != -1) options.sort.name = 1;
 
         return Product.find(filters, fields, options);
       }
@@ -367,6 +447,20 @@ function list(req, res, next){
 
       // Success response.
       var options = [];
+
+      // Sorting
+      if(sorting_params.length > 0){
+        var sort = [], sort_order = [];
+
+        for(var i = 0, len = sorting_params.length; i < len; i++){
+          var sorting_param = sorting_params[i];
+          sort.push(sorting_param.by);
+          sort_order.push(sorting_param.order);
+        }
+
+        options.push("sort=" + sort.join(";"));
+        options.push("sort_order=" + sort_order.join(";"));
+      }
 
       // Filtering
       if(filters_params.length > 0){
@@ -387,9 +481,9 @@ function list(req, res, next){
       // Field selection
       var includes = [], excludes = [];
 
-      for(var field in field_selection){
-        if(field_selection[field]) includes.push(field);
-        else excludes.push(field);
+      for(var i = 0, len = field_selection.length; i < len; i++){
+        if(field_selection[i].type == "include") includes.push(field_selection[i].field);
+        else excludes.push(field_selection[i].field);
       }
 
       if(includes.length > 0) options.push("include=" + includes.join(";"));
@@ -421,6 +515,7 @@ function list(req, res, next){
           next: next_page,
           previous_page: previous_page
         },
+        sorting: sorting_params,
         filters: filters_params,
         select: field_selection,
         data_size: products.length,

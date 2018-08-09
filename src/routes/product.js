@@ -1,5 +1,6 @@
 const express = require("express");
 const productController = require("../controllers/product");
+const operationsController = require("../controllers/operations");
 const router = express.Router();
 
 const authHelper = require("../helpers/auth");
@@ -11,5 +12,12 @@ router.route("/")
 router.route("/:productId")
   .delete(authHelper.checkToken, productController.remove)
   .patch(authHelper.checkToken, productController.update)
+
+router.route("/:productId/purchases").post(authHelper.checkToken, operationsController.purchase);
+
+router.route("/:productId/likes")
+  .post(authHelper.checkToken, operationsController.like)
+  .delete(authHelper.checkToken, operationsController.unlike)
+
 
 module.exports = router;
