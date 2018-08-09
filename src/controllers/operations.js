@@ -1,6 +1,5 @@
 const Product = require("mongoose").model("products");
 const ProductLog = require("mongoose").model("product_logs");
-const User = require("mongoose").model("users");
 
 // Route: POST /api/v1/:productId/purchases
 // Purchase a product.
