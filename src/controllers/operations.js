@@ -125,7 +125,8 @@ function like(req, res, next){
           price: product.price,
           popularity: product.popularity
         }
-      }
+      },
+      list: "api/v1/me/likes"
     });
 
   }).catch(function(error){
