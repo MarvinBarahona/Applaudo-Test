@@ -1,8 +1,9 @@
 const Product = require("mongoose").model("products");
 const ProductLog = require("mongoose").model("product_logs");
+const User = require("mongoose").model("users");
 
 // Route: POST /api/v1/:productId/purchases
-// Purchase a product. 
+// Purchase a product.
 function purchase(req, res, next){
   var id = req.params.productId;
   // Validate body
@@ -65,10 +66,11 @@ function purchase(req, res, next){
             _id: product._id,
             name: product.name,
             description: product.description,
-            price: product.price
-          },
-          list: "api/v1/me/purchases"
-        }
+            price: product.price,
+            popularity: product.popularity
+          }
+        },
+        list: "api/v1/me/purchases"
       });
 
     }).catch(function(error){
@@ -79,6 +81,61 @@ function purchase(req, res, next){
   }
 }
 
+// Route: POST /api/v1/:productId/likes
+// Like a product.
+function like(req, res, next){
+  var id = req.params.productId;
+
+  // Find product.
+  Product.findById(id).then(function(product){
+
+    // If not found.
+    if(!product) return Promise.reject({name: "NotFound"});
+
+    // Check if already liked
+    else{
+      var liked = false;
+
+      for(var i = 0, len = product.usersLikingId.length; i < len; i++){
+        if(product.usersLikingId[i] = req.auth.user){
+          liked = true;
+          i = len;
+        }
+      }
+
+      if(liked) return Promise.reject({name: "AlreadyLiked"});
+
+      // Else, increase popularity and add to array.
+      else{
+        product.usersLikingId.push(req.auth.user);
+        product.popularity++;
+
+        return product.save();
+      }
+    }
+  }).then(function(product){
+
+    // Success response.
+    res.status(201).json({
+      request: req.object,
+      entity: {
+        product: {
+          _id: product._id,
+          name: product.name,
+          description: product.description,
+          price: product.price,
+          popularity: product.popularity
+        }
+      }
+    });
+
+  }).catch(function(error){
+    if(error.name == "NotFound" || error.name == "CastError") next({status: 404, errors: ["product not found"]});
+    else if(error.name == "AlreadyLiked") next({status: 422, errors: ["You already liked this product"]});
+    else next({status: 500});
+  });
+}
+
 
 // Module exports
-module.exports = {purchase: purchase};
+module.exports = {purchase: purchase, like: like};

@@ -15,4 +15,8 @@ router.route("/:productId")
 
 router.route("/:productId/purchases").post(authHelper.checkToken, operationsController.purchase);
 
+router.route("/:productId/likes")
+  .post(authHelper.checkToken, operationsController.like);
+
+
 module.exports = router;
