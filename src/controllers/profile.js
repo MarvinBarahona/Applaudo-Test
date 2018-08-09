@@ -42,16 +42,11 @@ function getPurchases(req, res, next){
       _logs.forEach(function(_log){
         var log = {};
         log.purchase = _log.purchase;
-        var promise = Product.findById(_log.productId);
+        var promise = Product.findById(_log.productId, "name description price popularity");
 
         // Add the product data to the maped log object.
         promise.then(function(_product){
-          log.product = {
-            _id: _product._id,
-            name: _product.name,
-            description: _product.description,
-            price: _product.price
-          }
+          log.product = _product;
 
           logs.push(log);
         })
@@ -59,7 +54,7 @@ function getPurchases(req, res, next){
         promises.push(promise);
       });
 
-      // When all product's data were recovered. 
+      // When all product's data were recovered.
       return Promise.all(promises);
     }
   }).then(function(){
@@ -77,5 +72,26 @@ function getPurchases(req, res, next){
   });
 }
 
+// Route: GET /api/v1/me/likes
+// Get the user's likes
+function getLikes(req, res, next){
+  var logs = [];
+
+  // Get all liked products of the user.
+  Product.find({usersLikingId: req.auth.user}, "name description price popularity").then(function(products){
+
+    // Success response.
+    res.status(200).json({
+      request: req.object,
+      data_size: products.length,
+      data: products
+    });
+
+  // Any error is a server error.
+  }).catch(function(error){
+    next(error);
+  });
+}
+
 // Module exports.
-module.exports = {get: get, getPurchases: getPurchases};
+module.exports = {get: get, getPurchases: getPurchases, getLikes: getLikes};

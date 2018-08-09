@@ -5,8 +5,7 @@ const UserSchema = new mongoose.Schema({
   name: String,
   username: String,
   password: String,
-  roleId: mongoose.Schema.Types.ObjectId,
-  productsLikingId: [mongoose.Schema.Types.ObjectId]
+  roleId: mongoose.Schema.Types.ObjectId
 });
 
 mongoose.model('users', UserSchema);
