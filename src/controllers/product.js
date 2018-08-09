@@ -276,7 +276,7 @@ function list(req, res, next){
   }
 
   // Field selection.
-  var field_selection = {};
+  var field_selection = [];
 
   // Include
   var includes = req.query.include == null ? [] : req.query.include.split(";");
@@ -303,7 +303,7 @@ function list(req, res, next){
 
     // If not valid, error.
     if(!inArray) errors.push("Invalid include: '" + include + "'");
-    else field_selection[include] = true;
+    else field_selection.push({field: include, type: 'include'});
   }
 
   // Exclude
@@ -313,7 +313,7 @@ function list(req, res, next){
     {field: "popularity"}
   ];
 
-  // Check if include paramenters are valid.
+  // Check if exclude paramenters are valid.
   for(var i = 0, len_params = excludes.length; i < len_params; i++){
     var inArray = false;
     var exclude = excludes[i];
@@ -324,14 +324,14 @@ function list(req, res, next){
         inArray = true;
         j = len_allow;
 
-        // Check if include is only for admins.
+        // Check if exclude is only for admins.
         if(allow_exclude.admin != null && req.auth.role != "admin") errors.push("You are not allow to use exclude '" + exclude + "'");
       }
     }
 
     // If not valid, error.
     if(!inArray) errors.push("Invalid exclude: '" + exclude + "'");
-    else field_selection[exclude] = false;
+    else field_selection.push({field: exclude, type: 'exclude'});
   }
 
   if(errors.length > 0) next({status: 400, errors: errors});
@@ -371,17 +371,19 @@ function list(req, res, next){
 
     // Get the products.
       else{
+        var default_fields = ["name", "description", "price", "popularity"];
 
-        // Field selection.
-        var fields = {
-          name: 1,
-          description: 1,
-          price: 1,
+        for(var i = 0, len = field_selection.length; i < len; i++){
+          if(field_selection[i].type == "include") default_fields.push(field_selection[i].field);
+          else default_fields = default_fields.filter(function(_field){ return _field != this}, field_selection[i].field)
         }
 
-        // Possible field selection,
-        if(field_selection["stock"] == true) fields["stock"] = 1;
-        if(field_selection["popularity"] != false) fields["popularity"] = 1;
+        // Field selection.
+        var fields = {};
+
+        for(var i = 0, len = default_fields.length; i < len; i++){
+          fields[default_fields[i]] = 1
+        }
 
         // Sot and pagination.
         var options = {
@@ -418,9 +420,9 @@ function list(req, res, next){
       // Field selection
       var includes = [], excludes = [];
 
-      for(var field in field_selection){
-        if(field_selection[field]) includes.push(field);
-        else excludes.push(field);
+      for(var i = 0, len = field_selection.length; i < len; i++){
+        if(field_selection[i].type == "include") includes.push(field_selection[i].field);
+        else excludes.push(field_selection[i].field);
       }
 
       if(includes.length > 0) options.push("include=" + includes.join(";"));
