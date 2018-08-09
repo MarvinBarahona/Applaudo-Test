@@ -43,4 +43,4 @@ Of course, here's a link to check the [API reference in the wiki](https://github
 
 ***
 ## Changelog
-Current version is v0.2.0. See the [full list of versions and changelog in the wiki](https://github.com/MarvinBarahona/Applaudo-Test/wiki/Changelog)
+Current version is v1.0.0. See the [full list of versions and changelog in the wiki](https://github.com/MarvinBarahona/Applaudo-Test/wiki/Changelog)
