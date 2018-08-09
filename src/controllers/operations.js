@@ -24,7 +24,7 @@ function purchase(req, res, next){
       product = _product;
 
       // If not found.
-      if(!product) return Promise.reject({name: "NotFound"});
+      if(!product || !product.active) return Promise.reject({name: "NotFound"});
 
       // If not enough.
       else if(product.stock < quantity) return Promise.reject({name: "NotEnough", left: product.stock});
@@ -89,7 +89,7 @@ function like(req, res, next){
   Product.findById(id).then(function(product){
 
     // If not found.
-    if(!product) return Promise.reject({name: "NotFound"});
+    if(!product || !product.active) return Promise.reject({name: "NotFound"});
 
     // Check if already liked
     else{
@@ -145,7 +145,7 @@ function unlike(req, res, next){
   Product.findById(id).then(function(product){
 
     // If not found.
-    if(!product) return Promise.reject({name: "NotFound"});
+    if(!product || !product.active) return Promise.reject({name: "NotFound"});
 
     // Check if liked
     else{

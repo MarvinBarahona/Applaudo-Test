@@ -78,7 +78,7 @@ function getLikes(req, res, next){
   var logs = [];
 
   // Get all liked products of the user.
-  Product.find({usersLikingId: req.auth.user}, "name description price popularity").then(function(products){
+  Product.find({usersLikingId: req.auth.user, active: true}, "name description price popularity").then(function(products){
 
     // Success response.
     res.status(200).json({
