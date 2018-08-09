@@ -276,8 +276,10 @@ function list(req, res, next){
   }
 
   // Field selection.
-  var includes = req.query.include == null ? [] : req.query.include.split(";");
   var field_selection = {};
+
+  // Include
+  var includes = req.query.include == null ? [] : req.query.include.split(";");
 
   var allow_includes = [
     {field: "stock", admin: true}
@@ -302,6 +304,34 @@ function list(req, res, next){
     // If not valid, error.
     if(!inArray) errors.push("Invalid include: '" + include + "'");
     else field_selection[include] = true;
+  }
+
+  // Exclude
+  var excludes = req.query.exclude == null ? [] : req.query.exclude.split(";");
+
+  var allow_excludes = [
+    {field: "popularity"}
+  ];
+
+  // Check if include paramenters are valid.
+  for(var i = 0, len_params = excludes.length; i < len_params; i++){
+    var inArray = false;
+    var exclude = excludes[i];
+
+    for(var j = 0, len_allow = allow_excludes.length; j < len_allow; j++){
+      var allow_exclude = allow_excludes[j];
+      if(exclude == allow_exclude.field){
+        inArray = true;
+        j = len_allow;
+
+        // Check if include is only for admins.
+        if(allow_exclude.admin != null && req.auth.role != "admin") errors.push("You are not allow to use exclude '" + exclude + "'");
+      }
+    }
+
+    // If not valid, error.
+    if(!inArray) errors.push("Invalid exclude: '" + exclude + "'");
+    else field_selection[exclude] = false;
   }
 
   if(errors.length > 0) next({status: 400, errors: errors});
@@ -351,6 +381,7 @@ function list(req, res, next){
 
         // Possible field selection,
         if(field_selection["stock"] == true) fields["stock"] = 1;
+        if(field_selection["popularity"] != false) fields["popularity"] = 1;
 
         // Sot and pagination.
         var options = {
