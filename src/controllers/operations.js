@@ -96,7 +96,7 @@ function like(req, res, next){
       var liked = false;
 
       for(var i = 0, len = product.usersLikingId.length; i < len; i++){
-        if(product.usersLikingId[i] = req.auth.user){
+        if(product.usersLikingId[i] == req.auth.user){
           liked = true;
           i = len;
         }
